@@ -23,6 +23,14 @@ typedef NS_ENUM(NSInteger, OPPProviderMode) {
     OPPProviderModeLive
 };
 
+/// An enumeration for server endpoint domain.
+typedef NS_ENUM(NSInteger, OPPProviderDomain) {
+    /// oppwa.com for Live server mode, test.oppwa.com for Sandbox mode.
+    OPPProviderDomainDefault,
+    /// eu-prod.oppwa.com for Live server mode, eu-test.oppwa.com for Sandbox mode.
+    OPPProviderDomainEU
+};
+
 NS_ASSUME_NONNULL_BEGIN
 /**
  Defines the methods and properties of the payment provider. Use the factory method `+paymentProviderWithMode:` to instantiate a new provider.
@@ -36,6 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (nonatomic) OPPProviderMode mode;
 
+/**
+ Determines Server endpoint domain.
+*/
+@property (nonatomic) OPPProviderDomain domain;
+
 /// @name Factory methods
 
 /**
@@ -44,6 +57,14 @@ NS_ASSUME_NONNULL_BEGIN
  @return An `OPPPaymentProvider` which can be used to process transactions.
 */
 + (instancetype)paymentProviderWithMode:(OPPProviderMode)mode;
+
+/**
+ Factory method to obtain a new provider.
+ @param mode Determines the type of Server to use. Transactions to the LIVE server come with fees attached.
+ @param domain Determines Server endpoint domain.
+ @return An `OPPPaymentProvider` which can be used to process transactions.
+*/
++ (instancetype)paymentProviderWithMode:(OPPProviderMode)mode andDomain:(OPPProviderDomain)domain;
 
 
 /// @name Process transaction
@@ -103,7 +124,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param completionHandler The completion block will be invoked once the response in received.
  */
 - (void)requestPaymentBrandsForBin:(NSString *)bin checkoutID:(NSString *)checkoutID completionHandler:(void (^)(NSArray <NSString *> * _Nullable paymentBrands, NSError * _Nullable error))completionHandler;
-
 
 /// @name Apple Pay methods
 /**

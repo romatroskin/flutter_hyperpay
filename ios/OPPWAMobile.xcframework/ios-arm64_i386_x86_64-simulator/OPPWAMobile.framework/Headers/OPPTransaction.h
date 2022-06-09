@@ -112,6 +112,11 @@ Constant for a key to get Alipay seller's order information which should be forw
 */
 FOUNDATION_EXPORT NSString *const OPPTransactionAlipaySignedOrderInfoKey;
 
+/**
+Constant for a key to get Bancontact app scheme URL to redirect to the Bancontact app.
+*/
+FOUNDATION_EXPORT NSString *const OPPTransactionBancontactLinkAppSchemeUrlKey;
+
 /// @name Deprecated
 
 /**

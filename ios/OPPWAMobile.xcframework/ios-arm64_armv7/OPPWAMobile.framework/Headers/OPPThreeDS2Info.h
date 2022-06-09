@@ -59,6 +59,11 @@ typedef NS_ENUM(NSInteger, OPPThreeDS2Status) {
 @property (nonatomic, copy, readonly, nullable) NSString *authResponse;
 
 /**
+ Text provided by the ACS/Issuer to Cardholder during a Frictionless or Decoupled transaction.
+ */
+@property (nonatomic, copy, readonly, nullable) NSString *cardHolderInfo;
+
+/**
  Creates 3DS info object with the provided status and authentication response.
  @param authStatus Status of 3-D Secure authentication.
  @param authResponse Authentication response as JSON string.

@@ -50,6 +50,16 @@ typedef NS_ENUM(NSInteger, OPPCheckoutBrandDetectionType) {
     OPPCheckoutBrandDetectionTypeBinList
 };
 
+/// An enumeration for the card brand detection appearance style
+typedef NS_ENUM(NSInteger, OPPCheckoutBrandDetectionAppearanceStyle) {
+    /// The detected card brands interface appears automatically.
+    OPPCheckoutBrandDetectionAppearanceStyleActive,
+    /// The detected card brands interface is hidden. The user can make it visible by clicking on card icon in the card number text field.
+    OPPCheckoutBrandDetectionAppearanceStyleInactive,
+    /// The detected card brands interface is disabled. First detected brand will be used.
+    OPPCheckoutBrandDetectionAppearanceStyleNone
+};
+
 /**
  Class which encapsulates settings for the built-in in-App payment page. Use this to customize both the visual elements of the payment pages as well as functionality. This includes changing colors and texts, defining payment methods.
  */
@@ -160,15 +170,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray<NSString *> *brandDetectionPriority;
 
 /**
- A flag that specifies whether show multiple detected brands under card number text field or keep them hidden by default.
- Default is `YES`.
+ A constant that control multiple detected brands under card number appearance style. Default is `OPPCheckoutBrandDetectionAppearanceStyleActive`.
  */
-@property (nonatomic) BOOL showDetectedBrands;
+@property (nonatomic) OPPCheckoutBrandDetectionAppearanceStyle brandDetectionAppearanceStyle;
 
 /**
  Sets custom logo to be presented at the checkout for the specified payment brands.
  */
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, UIImage *> *customLogos;
+
+/// @name Deprecated
+
+/**
+ A flag that specifies whether show multiple detected brands under card number text field or keep them hidden by default.
+ Default is `YES`.
+ @warning **Deprecated**. Use `brandDetectionAppearanceStyle` instead.
+ */
+@property (nonatomic) BOOL showDetectedBrands;
 
 @end
 NS_ASSUME_NONNULL_END

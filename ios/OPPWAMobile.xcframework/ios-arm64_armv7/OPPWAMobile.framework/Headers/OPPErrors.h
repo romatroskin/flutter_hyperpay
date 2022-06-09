@@ -103,6 +103,9 @@ typedef NS_ENUM(NSInteger, OPPErrorCode) {
     /// Klarna Payments specific error.
     OPPErrorCodeKlarnaInline = 5001,
     
+    /// Bancontact Link specific error.
+    OPPErrorCodeBancontactLink = 5002,
+    
     /// 3-D Secure 2 transaction error.
     OPPErrorCodeThreeDS2Failure = 6000
 };

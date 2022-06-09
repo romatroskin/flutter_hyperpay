@@ -92,7 +92,7 @@ class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Pl
 
         if (transaction.transactionType == TransactionType.SYNC) {
           /* check the result of synchronous transaction */
-          result.success(0);
+          result.success(resourcePath);
         } else {
           /* wait for the asynchronous transaction callback in the onNewIntent() */
         }
@@ -102,7 +102,7 @@ class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Pl
 
       CheckoutActivity.RESULT_CANCELED -> {
         /* shopper cancelled the checkout process */
-        result.success(1)
+        result.success(null)
         return true
       }
 
