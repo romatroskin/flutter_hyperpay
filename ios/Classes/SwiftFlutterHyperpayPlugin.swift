@@ -32,7 +32,7 @@ public class SwiftFlutterHyperpayPlugin: NSObject, FlutterPlugin {
               if transaction.type == .synchronous {
                   // If a transaction is synchronous, just request the payment status
                   // You can use transaction.resourcePath or just checkout ID to do it
-                  result(0)
+                  result(transaction.resourcePath)
               } else if transaction.type == .asynchronous {
                   // The SDK opens transaction.redirectUrl in a browser
                   // See 'Asynchronous Payments' guide for more details
@@ -42,7 +42,7 @@ public class SwiftFlutterHyperpayPlugin: NSObject, FlutterPlugin {
               }
           }, cancelHandler: {
               // Executed if the shopper closes the payment page prematurely
-              result(1)
+              result(nil)
           })
           //    result("iOS " + UIDevice.current.systemVersion)
       } else {
