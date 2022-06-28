@@ -3,6 +3,7 @@ package co.foreman.hyperpay.flutter_hyperpay
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.annotation.NonNull
 import com.oppwa.mobile.connect.checkout.dialog.CheckoutActivity
 import com.oppwa.mobile.connect.checkout.meta.CheckoutSettings
@@ -21,7 +22,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
 
 /** FlutterHyperpayPlugin */
-class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener {
+class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegistry.ActivityResultListener, PluginRegistry.NewIntentListener {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -29,6 +30,7 @@ class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Pl
   private lateinit var channel : MethodChannel
   private lateinit var context : Context
   private lateinit var result: Result
+  private var resourcePath: String? = null
   private var activity : Activity? = null
 
   private val paymentBrands = hashSetOf("VISA", "MASTER", "DIRECTDEBIT_SEPA")
@@ -42,17 +44,15 @@ class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Pl
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) =
     if (call.method == "checkout") {
       this.result = result
-      checkout(checkoutId = call.argument<String>("checkoutId") as String);
-//      result.success("Android ${android.os.Build.VERSION.RELEASE}")
+      checkout(checkoutId = call.argument<String>("checkoutId") as String)
     } else {
       result.notImplemented()
     }
 
   private fun checkout(checkoutId: String) {
     val checkoutSettings = CheckoutSettings(checkoutId, paymentBrands, Connect.ProviderMode.TEST)
-
-    // Set shopper result URL
-    checkoutSettings.shopperResultUrl = "companyname://result"
+      .setShopperResultUrl("foreman://payment-result")
+    checkoutSettings.isTotalAmountRequired = true
 
     val intent = checkoutSettings.createCheckoutActivityIntent(context)
     activity?.startActivityForResult(intent, CheckoutActivity.REQUEST_CODE_CHECKOUT)
@@ -65,6 +65,7 @@ class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Pl
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     activity = binding.activity
     binding.addActivityResultListener(this)
+    binding.addOnNewIntentListener(this)
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
@@ -74,6 +75,7 @@ class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Pl
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
     activity = binding.activity
     binding.addActivityResultListener(this)
+    binding.addOnNewIntentListener(this)
   }
 
   override fun onDetachedFromActivity() {
@@ -88,11 +90,11 @@ class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Pl
           data!!.getParcelableExtra(CheckoutActivity.CHECKOUT_RESULT_TRANSACTION)!!
 
         /* resource path if needed */
-        val resourcePath = data.getStringExtra(CheckoutActivity.CHECKOUT_RESULT_RESOURCE_PATH)
+        resourcePath = data.getStringExtra(CheckoutActivity.CHECKOUT_RESULT_RESOURCE_PATH)
 
         if (transaction.transactionType == TransactionType.SYNC) {
           /* check the result of synchronous transaction */
-          result.success(resourcePath);
+          result.success(resourcePath)
         } else {
           /* wait for the asynchronous transaction callback in the onNewIntent() */
         }
@@ -110,10 +112,20 @@ class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Pl
         /* error occurred */
         val error: PaymentError =
           data!!.getParcelableExtra(CheckoutActivity.CHECKOUT_RESULT_ERROR)!!
-        result.error(error.errorCode.name, error.errorMessage, error.errorInfo);
+        result.error(error.errorCode.name, error.errorMessage, error.errorInfo)
         return true
       }
     }
+    return false
+  }
+
+  override fun onNewIntent(intent: Intent): Boolean {
+    Log.d("FlutterHyperpayPlugin", "INTENT ARRIVED")
+    if (intent.scheme == "foreman") {
+      result.success(resourcePath)
+      return true
+    }
+
     return false
   }
 }
