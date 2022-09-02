@@ -33,7 +33,7 @@ class FlutterHyperpayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, Pl
   private var resourcePath: String? = null
   private var activity : Activity? = null
 
-  private val paymentBrands = hashSetOf("VISA", "MASTER", "DIRECTDEBIT_SEPA")
+  private val paymentBrands = hashSetOf("VISA", "MASTER", "MADA", "AMEX", "DIRECTDEBIT_SEPA")
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_hyperpay")

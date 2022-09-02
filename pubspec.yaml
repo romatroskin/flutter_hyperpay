@@ -1,7 +1,7 @@
 name: flutter_hyperpay
 description: A new flutter plugin project.
-version: 0.0.2
-homepage:
+version: 0.0.3
+homepage: https://github.com/romatroskin/flutter_hyperpay
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
