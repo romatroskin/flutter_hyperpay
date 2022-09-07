@@ -23,7 +23,7 @@ public class SwiftFlutterHyperpayPlugin: NSObject, FlutterPlugin {
             let checkoutSettings = OPPCheckoutSettings()
             
             // Set available payment brands for your shop
-            checkoutSettings.paymentBrands = ["VISA", "MASTER", "MADA", "AMEX" "DIRECTDEBIT_SEPA"]
+            checkoutSettings.paymentBrands = ["VISA", "MASTER", "MADA", "AMEX", "DIRECTDEBIT_SEPA"]
             
             // Set shopper result URL
             checkoutSettings.shopperResultURL = "foreman://payment-result"
